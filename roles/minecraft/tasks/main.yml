@@ -1,0 +1,66 @@
+- name: Install needed packages
+  ansible.builtin.package:
+    name: java-17-openjdk
+    state: present
+
+- name: Correct java version selected
+  community.general.alternatives:
+    name: java
+    path: /usr/lib/jvm/java-17-openjdk-17.0.2.0.8-1.rolling.el8.x86_64/bin/java
+
+- name: Creates directory for minecraft server
+  file:
+    path: "{{ minecraft_dir }}"
+    state: directory
+
+- name: Copy service file
+  template:
+    src: minecraft.service.j2
+    dest: /etc/systemd/system/minecraft.service
+    mode: 0644
+  notify:
+    - restart minecraft
+
+- name: Copy stop-service file
+  template:
+    src: run.sh.j2
+    dest: "{{ minecraft_dir }}/run.sh"
+    mode: 0644
+  notify:
+    - restart minecraft
+
+- name: Copy socket file
+  template:
+    src: minecraft.socket.j2
+    dest: /etc/systemd/system/minecraft.socket
+    mode: 0644
+  notify:
+    - restart minecraft
+
+
+- name: Copy server.jar
+  copy:
+    src: server.jar
+    dest: "{{ minecraft_dir }}/server.jar"
+    mode: 0755
+    backup: yes
+  notify:
+    - restart minecraft
+
+- name: Copy server.properties
+  copy:
+    src: server.properties
+    dest: "{{ minecraft_dir }}/server.properties"
+    mode: 0644
+    backup: yes
+  notify:
+    - restart minecraft
+
+- name: Copy eula
+  copy:
+    src: eula.txt
+    dest: "{{ minecraft_dir }}/eula.txt"
+    mode: 0644
+    backup: yes
+  notify:
+    - restart minecraft

@@ -1,0 +1,13 @@
+[Unit]
+Description=Minecraft server
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory={{ minecraft_dir }}
+ExecStartPre=/usr/bin/systemctl stop minecraft.socket
+ExecStartPre=+echo "run minecraft"
+ExecStart=/bin/bash run.sh
+
+[Install]
+WantedBy=multi-user.target

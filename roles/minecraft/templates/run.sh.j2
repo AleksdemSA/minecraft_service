@@ -1,0 +1,11 @@
+#!/bin/bash
+set -x
+
+cd {{ minecraft_dir }}
+echo "run service"
+/usr/bin/java -Xmx2048M -Xms2048M -jar server.jar nogui &
+echo "start timer"
+sleep 3600 # time of work service
+echo "stop game"
+systemctl stop minecraft
+systemctl restart minecraft.socket
