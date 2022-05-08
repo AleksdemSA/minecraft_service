@@ -7,5 +7,5 @@ echo "run service"
 echo "start timer"
 sleep 3600 # time of work service
 echo "stop game"
+systemctl restart minecraft.socket &
 systemctl stop minecraft
-systemctl restart minecraft.socket
